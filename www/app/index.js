@@ -27,6 +27,9 @@ function f(name, params) {
 var IS_CORDOVA = !!window.cordova;
 
 var app = {
+  URL_ERUV: 'http://bethisraelmalden.org/api/eruv/status.php?callback=?',
+  URL_EVENTS: 'http://bethisraelmalden.org/api/calendar/upcoming.php?callback=?',
+
   // options
   DATA_KEY: 'org.metaist.bim.data',
   store: null,
@@ -35,7 +38,14 @@ var app = {
   },
 
   // internal
-  // TODO
+  eruv: {
+    URL_PREFIX: 'https://twitter.com/maldeneruv/',
+    isUpdated: false,
+    dt: null,
+    id: '',
+    status: 'loading',
+    text: ''
+  },
 
   // DOM
   // TODO
@@ -57,18 +67,7 @@ var app = {
   ready: function () {
     // Store DOM nodes
     // TODO
-
-    // Grab preferences
-    if(IS_CORDOVA) {
-      this.store = plugins.appPreferences;
-      this.store.fetch(this.DATA_KEY).then(function (data) {
-        Object.assign(this.options, data || {});
-        // TODO: update settings UI
-        this.render();
-      }.bind(this));
-    }
-
-    return this;
+    return this.fetch();
   },
 
   change: function () {
@@ -80,7 +79,73 @@ var app = {
     return this;
   },
 
+  fetch: function () {
+    $.getJSON(this.URL_ERUV).done(function (tweets) {
+      var tweet = tweets[0];
+      var dtNow = moment();
+      var dtPost = moment(tweet.created_at);
+      var text = tweet.text.replace('\u00a0', ' '); // scrub weird text
+      var status = text.slice(0, text.indexOf(' ') - 1).toLowerCase();
+      var isUpdated = dtNow.diff(dtPost, 'days') <= 1;
+
+      Object.assign(this.eruv, {
+        isUpdated: isUpdated,
+        dt: dtPost,
+        id: tweet.id_str,
+        status: status,
+        text: text
+      });
+      this.render();
+    }.bind(this));
+
+
+    $.getJSON(this.URL_EVENTS).done(function(data) {
+      var events = [],
+        tmp_day = '',
+        tmp_events = [];
+
+      $.each(data.events, function (idx, item) {
+        var t = moment(item.when),
+          day = t.format('dddd, MMMM Do');
+
+        if (day != tmp_day) { // new day
+          if (tmp_day) { events.push({day: tmp_day, events: tmp_events}); }
+          tmp_day = day;
+          tmp_events = [];
+        }//end if
+
+        tmp_events.push({when: t.format('hh:mma'), title: item.title});
+      });//end $.each
+
+      if (tmp_day) { events.push({day: tmp_day, events: tmp_events}); }//end if
+
+      $('#upcoming')
+        .find('.loading').remove().end()
+        .render(events);
+    });//end $.getJSON
+
+
+
+    return this;
+  },
+
   render: function () {
+    var eruv = this.eruv;
+    if(eruv.isUpdated) {
+      $('#card-eruv')
+        .find('.status').set({'text': 'arrow_' + eruv.status + 'ward'}).end()
+        .find('.text').set({'text': eruv.text}).end()
+        .find('.link').set({'attr:href': eruv.URL_PREFIX + eruv.id}).end()
+    } else {
+      $('#card-eruv')
+        .find('.status').set({'text': 'not_interested'}).end()
+        .find('.text').set({'text': 'No Update'}).end()
+        .find('.link').set({'attr:href': URL_PREFIX}).end()
+    }//end if: rendered eruv
+
+
+
+
     return this;
   }
 };

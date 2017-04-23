@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'
-      data: gap: https://ssl.gstatic.com 'unsafe-eval';
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self' data: gap: https://ssl.gstatic.com http://bethisraelmalden.org 'unsafe-eval';
       style-src 'self' 'unsafe-inline';
       media-src *;
       img-src 'self' data: content:;" />
@@ -21,11 +21,25 @@
     <link rel="stylesheet" href="app/index.css" />
   </head>
   <body>
-    <div id="app" class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
-      <div class="mdl-layout__drawer">
-        <span class="mdl-layout-title">BIM</span>
+    <div id="app" class="mdl-layout mdl-js-layout mdl-layout--fixed-header
+      mdl-layout--fixed-drawer">
 
+      <header class="mdl-layout__header">
+        <div class="mdl-layout__header-row">
+          <span class="mdl-layout-title">BIM</span>
+          <div class="mdl-layout-spacer"></div>
+
+          <a target="_blank" href="http://bethisraelmalden.org"
+            class="mdl-button mdl-js-button mdl-button--icon">
+            <i class="material-icons">link</i>
+          </a>
+        </div>
+      </header>
+
+      <div class="mdl-layout__drawer">
         <form id="options" action="#">
+          <br />
+          <p>See whether the Malden Eruv is up and check minyan times.</p>
         </form>
 
         <footer>
@@ -36,16 +50,47 @@
             </a>
           </nav>
 
-          Idea by PLACEHOLDER<br />
           App by <a href="http://metaist.com">Metaist LLC</a>
         </footer>
 
       </div>
-      <main class="mdl-layout__content page-content">
+      <main class="mdl-layout__content">
+
+        <div id="card-eruv" class="mdl-card mdl-shadow--2dp">
+          <div class="mdl-card__title mdl-card--expand">
+            <h4>Malden Eruv</h4>
+            <div class="mdl-layout-spacer"></div>
+            <i class="status material-icons"></i>
+          </div>
+          <div class="mdl-card__actions mdl-card--border">
+            <small class="text"></small>
+            <div class="mdl-layout-spacer"></div>
+            <a href="#" class="link mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+              <i class="material-icons">link</i>
+            </a>
+          </div>
+        </div>
+
+
+        <div id="upcoming" class="mdl-card mdl-shadow--2dp" >
+          <span class="loading label label-info">Loading...</span>
+          <strong class="day"></strong>
+          <ul class="events mdl-list">
+            <li class="mdl-list__item">
+              <div class="title mdl-list__item-primary-content"></div>
+              <div class="when mdl-list__item-secondary-content"></div>
+            </li>
+          </ul>
+        </div>
+
       </main>
     </div>
 
-    <script src="cordova.js"></script>
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+    <script src="lib/lodash/dist/lodash.min.js"></script>
+    <script src="lib/duil/dist/duil.min.js"></script>
+    <script src="lib/moment/min/moment.min.js"></script>
+    <script src="lib/transparency/dist/transparency.min.js"></script>
     <script src="app/index.js"></script>
   </body>
 </html>

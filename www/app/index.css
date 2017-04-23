@@ -57,7 +57,7 @@ footer a {
   display: block;
 }
 
-.mdl-layout__content { overflow: hidden; }
+// .mdl-layout__content { overflow: hidden; }
 
 .center-center {
   position: absolute;
@@ -72,4 +72,49 @@ footer a {
 
   text-align: center;
   vertical-align: center;
+}
+
+.page-content {
+  background: #fff;
+  margin: 0 auto;
+}
+
+
+#card-eruv {
+  margin: 1em auto;
+  min-height: initial;
+}
+
+
+.mdl-card__actions {
+  display: flex;
+  box-sizing:border-box;
+  align-items: center;
+}
+
+.mdl-card__title > h4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.mdl-card__title {
+  align-items: flex-start;
+}
+
+.mdl-card__actions {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+#upcoming {
+  font-size: 16px;
+  margin: 2em auto;
+  padding: 1em;
+  padding-bottom: 0;
+}
+#upcoming .day { font-size: 20px; }
+
+.mdl-list { margin-top: 0; }
+.mdl-list__item {
+  padding: 0;
+  min-height: 2em;
 }
